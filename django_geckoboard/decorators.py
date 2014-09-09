@@ -24,7 +24,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.datastructures import SortedDict
 from django.utils.decorators import available_attrs
-from django.utils import simplejson
+import simplejson
 
 
 TEXT_NONE = 0
@@ -44,7 +44,7 @@ class WidgetDecorator(object):
     contain the correct API key, or a 403 Forbidden response is
     returned.
 
-    If the ``encrypted` argument is set to True, then the data will be 
+    If the ``encrypted` argument is set to True, then the data will be
     encrypted using ``GECKOBOARD_PASSWORD`` (JSON only).
     """
     def __new__(cls, *args, **kwargs):
@@ -57,7 +57,7 @@ class WidgetDecorator(object):
                     'This package can be installed manually or by enabling ' + \
                     'the encryption feature during installation.'
                 )
-            obj._encrypted = kwargs.pop('encrypted')        
+            obj._encrypted = kwargs.pop('encrypted')
         obj._format = None
         if 'format' in kwargs:
             obj._format = kwargs.pop('format')
@@ -459,7 +459,7 @@ def _derive_key_and_iv(password, salt, key_length, iv_length):
 def _encrypt(data):
     """Equivalent to OpenSSL using 256 bit AES in CBC mode"""
     BS = AES.block_size
-    pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS) 
+    pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
     password = settings.GECKOBOARD_PASSWORD
     salt = Random.new().read(BS - len('Salted__'))
     key, iv = _derive_key_and_iv(password, salt, 32, BS)
